@@ -1,6 +1,6 @@
 # 🕵️‍♂️ Cloak-Room
 
-Cloak-Room is an **Anonymous ChatRoom Generator** that enables **real-time**, **secure**, and **scalable** chat functionality using multi-server architecture. Built using **Next.js**, **Socket.io**, **Kafka**, and **Docker**, it ensures fast, distributed, and reliable anonymous messaging.
+Cloak-Room is an **Anonymous ChatRoom Generator** that enables **real-time**, **secure**, and **scalable** chat functionality using multi-server architecture. Built using **Next.js**, **Socket.io**, **Kafka**, and **Docker**, it ensures fast, distributed, and reliable anonymous messaging...
 
 ---
 
