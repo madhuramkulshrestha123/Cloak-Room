@@ -26,10 +26,9 @@ export default function LoginModal() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-2xl">Welcome to QuickChat</DialogTitle>
+          <DialogTitle className="text-2xl">Welcome to CloakRoom</DialogTitle>
           <DialogDescription>
-            QuickChat makes it effortless to create secure chat links and start
-            conversations in seconds.
+            CloakRoom creates locked chat rooms for your group—instant, invite-only, and secure by default 🔐
           </DialogDescription>
         </DialogHeader>
         <Button variant="outline" onClick={handleGoogleLogin}>

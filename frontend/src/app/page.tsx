@@ -3,6 +3,7 @@ import HeroSection from "@/components/base/HeroSection";
 import FeatureSection from "@/components/base/FeatureSection";
 import UserReviews from "@/components/base/UserReviews";
 import Footer from "@/components/base/Footer";
+import Guide from "@/components/base/GuideSection";
 import { authOptions, CustomSession } from "./api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 export default async function LandingPage() {
@@ -16,6 +17,9 @@ export default async function LandingPage() {
 
       {/* Features Section */}
       <FeatureSection />
+
+      {/* User Reviews Section */}
+      <Guide />
 
       {/* User Reviews Section */}
       <UserReviews />
