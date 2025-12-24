@@ -129,7 +129,8 @@ export default function Chats({
                   : "bg-gradient-to-r from-gray-200 to-gray-300 text-black self-start"
               }`}
             >
-              {message.message}
+              <div className="text-xs mb-1 opacity-50">{message.name}</div>
+              <div>{message.message}</div>
             </div>
           ))}
         </div>

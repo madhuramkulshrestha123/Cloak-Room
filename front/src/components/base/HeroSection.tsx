@@ -9,7 +9,7 @@ export default function HeroSection() {
         Instant Chat Links for Seamless Conversations
       </h1>
       <p className="text-xl text-gray-600 mb-8">
-        QuickChat makes it effortless to create secure chat links and start
+        CloakRoom makes it effortless to create secure chat links and start
         conversations in seconds.
       </p>
       <Link href="/dashboard">
