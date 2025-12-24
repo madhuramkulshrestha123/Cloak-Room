@@ -1,42 +1,46 @@
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { getSocket } from "@/lib/socket.config";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { v4 as uuidv4 } from "uuid";
 export default function Chats({
   group,
   oldMessages,
   chatUser,
+  token,
 }: {
   group: GroupChatType;
   oldMessages: Array<MessageType> | [];
   chatUser?: GroupChatUserType;
+  token?: string;
 }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Array<MessageType>>(oldMessages);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const socket = useMemo(() => getSocket(token), [token]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  let socket = useMemo(() => {
-    const socket = getSocket();
-    socket.auth = {
-      room: group.id,
-    };
-    return socket.connect();
-  }, []);
   useEffect(() => {
+    // Join the room after connecting
+    socket.auth = { ...socket.auth, room: group.id };
+    socket.connect();
+
+    // Listen for new messages
     socket.on("message", (data: MessageType) => {
       console.log("The message is", data);
       setMessages((prevMessages) => [...prevMessages, data]);
       scrollToBottom();
     });
 
+    // Clean up on unmount
     return () => {
-      socket.close();
+      socket.off("message");
+      socket.disconnect();
     };
-  }, []);
+  }, [socket, group.id]);
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -47,9 +51,10 @@ export default function Chats({
       created_at: new Date().toISOString(),
       group_id: group.id,
     };
+    
     socket.emit("message", payload);
     setMessage("");
-    setMessages([...messages, payload]);
+    // Don't add to local messages here since the socket event will handle it
   };
 
   return (

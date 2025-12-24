@@ -1,6 +1,7 @@
 import { Account, AuthOptions, ISODateString, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import axios, { AxiosError } from "axios";
 import { LOGIN_URL } from "@/lib/apiAuthRoutes";
 import { redirect } from "next/navigation";
@@ -85,5 +86,36 @@ export const authOptions: AuthOptions = {
         },
       },
     }),
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        try {
+          const response = await axios.post(LOGIN_URL, {
+            email: credentials?.email,
+            password: credentials?.password,
+          });
+          
+          if (response.data.user) {
+            const user = response.data.user;
+            return {
+              id: user.id.toString(),
+              email: user.email,
+              name: user.name,
+              image: user.image,
+              token: user.token,
+            };
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error("Credentials login error:", error);
+          return null;
+        }
+      }
+    })
   ],
 };

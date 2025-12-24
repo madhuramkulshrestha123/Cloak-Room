@@ -9,10 +9,12 @@ export default function ChatBase({
   group,
   users,
   oldMessages,
+  token,
 }: {
   group: GroupChatType;
   users: Array<GroupChatUserType> | [];
   oldMessages: Array<MessageType> | [];
+  token?: string;
 }) {
   const [open, setOpen] = useState(true);
   const [chatUser, setChatUser] = useState<GroupChatUserType>();
@@ -34,7 +36,7 @@ export default function ChatBase({
         )}
 
         {/* Messages */}
-        <Chats oldMessages={oldMessages} group={group} chatUser={chatUser} />
+        <Chats oldMessages={oldMessages} group={group} chatUser={chatUser} token={token} />
       </div>
     </div>
   );

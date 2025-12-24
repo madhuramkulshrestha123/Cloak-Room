@@ -1,9 +1,12 @@
 interface AuthUser {
   id: number;
+  username?: string;
   name: string;
   email: string;
-  google_id: string;
+  age?: number;
+  google_id?: string;
   image?: string;
+  provider: string;
   // Add other relevant user properties here
 }
 

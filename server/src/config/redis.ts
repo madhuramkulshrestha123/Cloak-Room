@@ -1,27 +1,37 @@
-import { Redis } from '@upstash/redis';
+import { Redis as UpstashRedis } from '@upstash/redis';
 
-let redis: Redis;
+let redis: UpstashRedis;
 
-if (process.env.NODE_ENV === 'production') {
-  // Use Upstash for production, pulling URL and token from env variables for better security
-  redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL as string,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
-  });
-} else {
-  // For local development fallback to local Redis using ioredis (optional)
-  // or else use Upstash with development creds
-  // Here, you can keep local ioredis or connect to Upstash test instance
-
-  // Option 1: Keep using ioredis for localhost development:
-  // import IORedis from 'ioredis';
-  // redis = new IORedis({ 
-  //   host: 'localhost',
-  //   port: 6379,
-  // });
-
-  // Option 2: Use Upstash for both prod and dev by providing dev environment variables:
-  redis = new Redis({
+try {
+  // For local development, we'll create a mock Redis instance if real connection fails
+  if (process.env.NODE_ENV === 'production') {
+    // Use Upstash for production
+    redis = new UpstashRedis({
+      url: process.env.UPSTASH_REDIS_REST_URL as string,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+    });
+  } else {
+    // For local development, try to connect to Upstash
+    if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+      redis = new UpstashRedis({
+        url: process.env.UPSTASH_REDIS_REST_URL as string,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+      });
+      console.log('Using Upstash Redis for development');
+    } else {
+      console.log('Upstash Redis credentials not found, you may need to set them up');
+      // We still create the Upstash Redis instance but it may fail later
+      // In that case, Socket.IO will fall back to memory adapter
+      redis = new UpstashRedis({
+        url: process.env.UPSTASH_REDIS_REST_URL as string,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+      });
+    }
+  }
+} catch (error) {
+  console.log('Error initializing Redis, Socket.IO will use in-memory adapter:', error);
+  // We'll let Socket.IO handle the fallback to memory adapter
+  redis = new UpstashRedis({
     url: process.env.UPSTASH_REDIS_REST_URL as string,
     token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
   });

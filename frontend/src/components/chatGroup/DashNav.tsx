@@ -2,7 +2,7 @@
 import React from "react";
 import ProfileMenu from "../auth/ProfileMenu";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function DashNav({
   image,
